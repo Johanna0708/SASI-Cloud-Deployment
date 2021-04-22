@@ -32,8 +32,8 @@ public class WebAppApplication {
 	private List<Student> student = new ArrayList<>(Arrays.asList(new Student("Peter", "Meyer")));
 
 	@GetMapping("/greetStudent")
-	public String greetStudent(@RequestParam(defaultValue = "Stranger") String vorname) {
-		return String.format("Hello %s!", vorname);
+	public String greetStudent(@RequestParam(defaultValue = "Student") String vorname) {
+		return String.format("Hallo %s! Herzlich Willkommen in der Vorlesung.", vorname);
 	}
 
 	@PostMapping("/join")
