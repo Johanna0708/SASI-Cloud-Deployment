@@ -1,11 +1,20 @@
 package de.thbrandenburg.webapp;
 
-public class Student {
-    public String vorname;
-    public String nachname;
 
-    public Student(String vorname, String nachname){
-        this.vorname = vorname;
-        this.nachname = nachname;
+import javax.persistence.Entity;
+
+@Entity
+public class Student extends Person{
+
+    public Student(String firstName, String lastName) {
+       super(firstName, lastName);
     }
+
+    public Student(String firstName){
+        super(firstName);
+    }
+
+    public Student(){
+
+}
 }
