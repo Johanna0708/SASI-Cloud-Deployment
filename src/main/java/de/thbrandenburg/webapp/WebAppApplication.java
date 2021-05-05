@@ -1,6 +1,7 @@
 package de.thbrandenburg.webapp;
 	import com.fasterxml.jackson.core.JsonProcessingException;
 	import com.fasterxml.jackson.databind.ObjectMapper;
+	import com.fasterxml.jackson.databind.SerializationFeature;
 	import org.hibernate.Session;
 	import org.hibernate.SessionFactory;
 	import org.hibernate.boot.Metadata;
@@ -21,6 +22,7 @@ package de.thbrandenburg.webapp;
 @SpringBootApplication
 @RestController
 public class WebAppApplication {
+	StandardServiceRegistry ssr;
 
 	public static void main(String[] args) {
 		SpringApplication.run(WebAppApplication.class, args);
@@ -35,7 +37,7 @@ public class WebAppApplication {
 		student.setAge(25);
 		student.setLastName("Schmidt");
 
-		StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure().build();
+		ssr = new StandardServiceRegistryBuilder().configure().build();
 
 		Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
 		SessionFactory factory = meta.getSessionFactoryBuilder().build();
@@ -49,9 +51,33 @@ public class WebAppApplication {
 		return "Studierende(r) wurde erfolgreich in der Datenbank persistiert!";
 	}
 
+	@GetMapping("/students")
+	public String viewStudents() {
+
+		ssr = new StandardServiceRegistryBuilder().configure().build();
+
+		Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
+		SessionFactory factory = meta.getSessionFactoryBuilder().build();
+		Session session = factory.openSession();
+
+		session.beginTransaction();
+		Student student = session.load(Student.class, 2L);
+		session.flush();
+
+		String studentObjectMappedToJSONString = null;
+		ObjectMapper om = new ObjectMapper();
+		om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+		try {
+			studentObjectMappedToJSONString = om.writeValueAsString(student);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return studentObjectMappedToJSONString;
+	}
+
+
 	@PostMapping("/profs")
 	public String createProfessor(@RequestParam (value = "firstName") String firstName) {
-		//public String createPerson(@RequestBody String firstName) { //Parameter muss im Body übergeben werden
 		Professor prof = new Professor (firstName);
 		prof.setAge(42);
 		prof.setLastName("Kunz");
@@ -69,26 +95,6 @@ public class WebAppApplication {
 		factory.close();
 		return "Professor(in) wurde erfolgreich in der Datenbank persistiert!";
 	}
-
-	@GetMapping("/students")
-	public String viewStudents() {
-
-		Student student2 = new Student("Anna","Schmidt");
-		Student student1 = new Student("Peter","Schmidt");
-		student2.setAge(19);
-		students.add(student1);
-				students.add(student2);
-
-		String studentObjectMappedToJSONString = null;
-			ObjectMapper om = new ObjectMapper();
-			try {
-				studentObjectMappedToJSONString = om.writeValueAsString(students);
-			} catch (JsonProcessingException e) {
-				e.printStackTrace();
-			}
-			return studentObjectMappedToJSONString;
-	}
-
 
 
 
