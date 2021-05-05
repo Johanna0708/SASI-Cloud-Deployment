@@ -4,11 +4,10 @@ import javax.persistence.*;
 
 
 @MappedSuperclass
-public abstract class Person {
+public class Person {
     private String firstName;
     private String lastName;
     private Integer age = 0;
-    private Long id;
 
     public Person(String firstName, String lastName){
         this.firstName = firstName;
@@ -36,6 +35,7 @@ public abstract class Person {
         return firstName;
     }
 
+    @Column(name = "last_name")
     public String getLastName() {
         return lastName;
     }
@@ -47,17 +47,5 @@ public abstract class Person {
 
     public Integer getAge() {
         return age;
-    }
-
-
-    public void setId(Long id){
-        this.id = id;
-    }
-
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long getId(){
-        return id;
     }
 }

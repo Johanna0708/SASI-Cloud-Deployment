@@ -35,7 +35,7 @@ public class WebAppApplication {
 	//public String createPerson(@RequestBody String firstName) { //Parameter muss im Body übergeben werden
 		Student student = new Student (firstName);
 		student.setAge(25);
-		student.setLastName("Schmidt");
+		student.setLastName("Meyer");
 
 		ssr = new StandardServiceRegistryBuilder().configure().build();
 
@@ -95,6 +95,32 @@ public class WebAppApplication {
 		factory.close();
 		return "Professor(in) wurde erfolgreich in der Datenbank persistiert!";
 	}
+
+	@GetMapping("/profs")
+	public String viewProfessor() {
+
+		ssr = new StandardServiceRegistryBuilder().configure().build();
+
+		Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
+		SessionFactory factory = meta.getSessionFactoryBuilder().build();
+		Session session = factory.openSession();
+
+		session.beginTransaction();
+		Professor prof = session.load(Professor.class, 4L);
+		session.flush();
+
+		String studentObjectMappedToJSONString = null;
+		ObjectMapper om = new ObjectMapper();
+		om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+		try {
+			studentObjectMappedToJSONString = om.writeValueAsString(prof);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return studentObjectMappedToJSONString;
+	}
+
+
 
 
 
