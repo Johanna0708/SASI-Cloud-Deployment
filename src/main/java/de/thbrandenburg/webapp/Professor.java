@@ -10,6 +10,10 @@ public class Professor extends Person {
         super(firstName, lastName);
     }
 
+    public Professor(String firstName){
+        super(firstName);
+    }
+
     public Professor(){
 
     }

@@ -29,9 +29,11 @@ public class WebAppApplication {
 
 
 	@PostMapping("/students")
-	public String createPerson(@RequestParam(value = "firstName") String firstName) {
+	public String createStudents(@RequestParam (value = "firstName") String firstName) {
+	//public String createPerson(@RequestBody String firstName) { //Parameter muss im Body übergeben werden
 		Student student = new Student (firstName);
 		student.setAge(25);
+		student.setLastName("Schmidt");
 
 		StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure().build();
 
@@ -47,6 +49,26 @@ public class WebAppApplication {
 		return "Studierende(r) wurde erfolgreich in der Datenbank persistiert!";
 	}
 
+	@PostMapping("/profs")
+	public String createProfessor(@RequestParam (value = "firstName") String firstName) {
+		//public String createPerson(@RequestBody String firstName) { //Parameter muss im Body übergeben werden
+		Professor prof = new Professor (firstName);
+		prof.setAge(42);
+		prof.setLastName("Kunz");
+
+		StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure().build();
+
+		Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
+		SessionFactory factory = meta.getSessionFactoryBuilder().build();
+		Session session = factory.openSession();
+
+		session.beginTransaction();
+		session.persist(prof);
+		session.flush();
+		session.close();
+		factory.close();
+		return "Professor(in) wurde erfolgreich in der Datenbank persistiert!";
+	}
 
 	@GetMapping("/students")
 	public String viewStudents() {

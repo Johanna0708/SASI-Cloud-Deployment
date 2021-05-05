@@ -31,10 +31,6 @@ public abstract class Person {
         this.lastName = lastName;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
     @Column(name = "first_name")
     public String getFirstName() {
         return firstName;
@@ -44,17 +40,24 @@ public abstract class Person {
         return lastName;
     }
 
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
     public Integer getAge() {
         return age;
     }
 
-    public void setId(long id){
+
+    public void setId(Long id){
         this.id = id;
     }
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long getID(){
+    public Long getId(){
         return id;
     }
 }
